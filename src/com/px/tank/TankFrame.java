@@ -12,6 +12,7 @@ import java.util.concurrent.BlockingQueue;
 public class TankFrame extends Frame {
 
      Tank myTank = new Tank(200,200,Dir.DOWN);
+     Bullet mybullet= new Bullet(200,200,Dir.DOWN);
     //继承父类的方法
     public TankFrame() {
         //Frame图形窗口
@@ -38,8 +39,10 @@ public class TankFrame extends Frame {
     //窗口重置(关闭再打开)时自动调用，Graphics类似画笔，可画图
     @Override
     public void paint(Graphics g) {
-        //在tank类中，创建Tank
+        //在tank类中，创建(画出)Tank
         myTank.paint(g);
+        //在bullet类中，创建(画出)bullet
+        mybullet.paint(g);
 
     }
 
@@ -76,7 +79,7 @@ public class TankFrame extends Frame {
                       break;
               }
 
-            //将被按下的方向传入
+            //将被按下的方向状态传入
             setMainTankDir();
         }
 
@@ -106,23 +109,29 @@ public class TankFrame extends Frame {
                 default:
                     break;
             }
-
+            //将被抬起的状态传入
             setMainTankDir();
         }
 
 
         //根据按键状态改变方向
         public void setMainTankDir() {
-/*           Dir dir = myTank.getDir();
-           if (bL) dir = Dir.LEFT;
-           if (bU) dir = Dir.UP;
-           if (bR) dir = Dir.RIGHT;
-           if (bD) dir = Dir.DOWN;*/
+/*          Dir dir = myTank.getDir();
+            if (bL) dir = Dir.LEFT;
+            if (bU) dir = Dir.UP;
+            if (bR) dir = Dir.RIGHT;
+            if (bD) dir = Dir.DOWN;*/
+            //当都为false时说明没有方向传入
+            if (!bL && !bU && !bR && !bD){
+                myTank.setMoving(false);
+            } else {
+                myTank.setMoving(true);
+                if (bL) myTank.setDir(Dir.LEFT);
+                if (bU) myTank.setDir(Dir.UP);
+                if (bR) myTank.setDir(Dir.RIGHT);
+                if (bD) myTank.setDir(Dir.DOWN);
+            }
 
-            if (bL) myTank.setDir(Dir.LEFT);
-            if (bU) myTank.setDir(Dir.UP);
-            if (bR) myTank.setDir(Dir.RIGHT);
-            if (bD) myTank.setDir(Dir.DOWN);
         }
     }
 
