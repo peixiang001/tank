@@ -11,7 +11,8 @@ import java.util.concurrent.BlockingQueue;
 
 public class TankFrame extends Frame {
 
-     Tank myTank = new Tank(200,200,Dir.DOWN);
+     //this就是当前的TankFrame
+     Tank myTank = new Tank(200,200,Dir.DOWN,this);
      Bullet mybullet= new Bullet(200,200,Dir.DOWN);
      //设置游戏场景大小
      static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
@@ -93,6 +94,8 @@ public class TankFrame extends Frame {
                   case KeyEvent.VK_DOWN:
                       bD = true;
                       break;
+                  case KeyEvent.VK_SPACE:
+                      myTank.fire();
                   default:
                       System.out.println("default");
                       break;
