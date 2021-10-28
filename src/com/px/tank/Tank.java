@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 
 public class Tank {
 
+    //坐标位置
     private int x , y;
     //初始方向
     private  Dir dir = Dir.DOWN;
@@ -18,6 +19,14 @@ public class Tank {
 
     //窗口
     private TankFrame tf = null;
+
+
+    private boolean living = true;
+
+    //tank的宽高
+    public static int WIDTH = ResourceMgr.tankD.getWidth();
+    public static int HEIGHT = ResourceMgr.tankD.getHeight();
+
 
     public Tank() {
     }
@@ -73,6 +82,9 @@ public class Tank {
         g.setColor(Color.BLUE);
         g.fillRect(x,y,40,40);
         g.setColor(c);*/
+        if (!living) {
+            tf.tanks.remove(this);
+        }
         switch (dir) {
             case LEFT:
                 g.drawImage(ResourceMgr.tankL,x,y,null);
@@ -114,7 +126,18 @@ public class Tank {
 
     public void fire() {
 
-        tf.bullets.add(new Bullet(this.x,this.y,this.dir,this.tf));
+        //计算子弹应该出现的位置，tank的位置，加上tank大小的一半，再减去子弹大小的一半，让子弹处于，tank中间？
+        int bx = this.x + Tank.WIDTH/2 - Bullet.getWIDTH()/2;
+        int by = this.y + Tank.HEIGHT/2 - Bullet.getHEIGHT()/2;
 
+
+        tf.bullets.add(new Bullet(bx,by,this.dir,this.tf));
+
+    }
+
+
+    //消失
+    public void die() {
+        this.living = false;
     }
 }

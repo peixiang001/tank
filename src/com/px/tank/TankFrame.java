@@ -18,6 +18,7 @@ public class TankFrame extends Frame {
      Tank myTank = new Tank(200,200,Dir.DOWN,this);
      //多个子弹
      List<Bullet> bullets = new ArrayList<>();
+     List<Tank> tanks = new ArrayList<>();
      //设置游戏场景大小
      static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
     //继承父类的方法
@@ -69,6 +70,7 @@ public class TankFrame extends Frame {
         g.setColor(Color.WHITE);
         //显示子弹数量
         g.drawString("子弹的数量：" + bullets.size(),10,60);
+        g.drawString("敌tank的数量：" + tanks.size(),10,80);
         g.setColor(c);
 
         //在tank类中，创建(画出)Tank
@@ -79,12 +81,25 @@ public class TankFrame extends Frame {
             bullets.get(i).paint(g);
         }
 
-/*      //删除方式2
+        //画出地方tank
+        for (int i = 0; i < tanks.size(); i++) {
+            tanks.get(i).paint(g);
+        }
+        //碰撞,子弹打坦克
+        for (int i = 0; i < bullets.size() ; i++) {
+            for (int j = 0; j < tanks.size() ; j++) {
+                bullets.get(i).collideWith(tanks.get(j));
+            }
+        }
+/*      //删除方式2，迭代器方式
         for (Iterator<Bullet> iterator = bullets.iterator(); iterator.hasNext();) {
              Bullet b = iterator.next();
              if (!b.isLiving()) iterator.remove();
         }*/
 
+/*        for (Bullet bullet : bullets) {
+            bullet.paint(g);
+        }*/
 
     }
 
@@ -105,15 +120,19 @@ public class TankFrame extends Frame {
               switch (key) {
                   case KeyEvent.VK_LEFT:
                       bL = true;
+                      setMainTankDir();
                       break;
                   case KeyEvent.VK_UP:
                       bU = true;
+                      setMainTankDir();
                       break;
                   case KeyEvent.VK_RIGHT:
                       bR = true;
+                      setMainTankDir();
                       break;
                   case KeyEvent.VK_DOWN:
                       bD = true;
+                      setMainTankDir();
                       break;
                   case KeyEvent.VK_SPACE:
                       myTank.fire();
@@ -123,7 +142,7 @@ public class TankFrame extends Frame {
               }
 
             //将被按下的方向状态传入
-            setMainTankDir();
+            //setMainTankDir();
         }
 
         //抬起调用
@@ -135,25 +154,23 @@ public class TankFrame extends Frame {
             switch (key) {
                 case KeyEvent.VK_LEFT:
                     bL = false;
-
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_UP:
                     bU = false;
-
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_RIGHT:
                     bR = false;
-
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_DOWN:
                     bD = false;
-
+                    setMainTankDir();
                     break;
                 default:
                     break;
             }
-            //将被抬起的状态传入
-            setMainTankDir();
         }
 
 
