@@ -13,10 +13,12 @@ public class TankFrame extends Frame {
 
      Tank myTank = new Tank(200,200,Dir.DOWN);
      Bullet mybullet= new Bullet(200,200,Dir.DOWN);
+     //设置游戏场景大小
+     static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
     //继承父类的方法
     public TankFrame() {
         //Frame图形窗口
-        setSize(800, 600);
+        setSize(GAME_WIDTH, GAME_HEIGHT);
         setResizable(false);
         setTitle("tank war");
         //true设置可见
@@ -35,6 +37,24 @@ public class TankFrame extends Frame {
     }
 
 
+    //解决游戏屏幕闪烁，双缓冲问题
+    Image offScreenImage = null;
+    @Override
+    public void update(Graphics g) {
+        if (offScreenImage == null) {
+            offScreenImage = this.createImage(GAME_WIDTH, GAME_HEIGHT);
+        }
+        Graphics gOffScreen = offScreenImage.getGraphics();
+        Color c = gOffScreen.getColor();
+        gOffScreen.setColor(Color.BLACK);
+        gOffScreen.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+        gOffScreen.setColor(c);
+        paint(gOffScreen);
+        g.drawImage(offScreenImage, 0, 0, null);
+    }
+
+
+
     //调用父类paint
     //窗口重置(关闭再打开)时自动调用，Graphics类似画笔，可画图
     @Override
@@ -45,7 +65,6 @@ public class TankFrame extends Frame {
         mybullet.paint(g);
 
     }
-
 
     //键盘监听处理类
     class MyKeyListener extends KeyAdapter {
