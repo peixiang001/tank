@@ -11,9 +11,7 @@ import java.util.concurrent.BlockingQueue;
 
 public class TankFrame extends Frame {
 
-    int x = 200 ;
-    int y = 200 ;
-
+     Tank myTank = new Tank(200,200,Dir.DOWN);
     //继承父类的方法
     public TankFrame() {
         //Frame图形窗口
@@ -40,8 +38,8 @@ public class TankFrame extends Frame {
     //窗口重置(关闭再打开)时自动调用，Graphics类似画笔，可画图
     @Override
     public void paint(Graphics g) {
-        //设置位置和大小
-        g.fillRect(x,y,40,40);
+        //在tank类中，创建Tank
+        myTank.paint(g);
 
     }
 
@@ -59,28 +57,27 @@ public class TankFrame extends Frame {
         @Override
         public void keyPressed(KeyEvent e) {
               int key = e.getKeyCode();
-              //判断按的是上下左右那个键
+              //判断按的是那个方向，改为true状态
               switch (key) {
                   case KeyEvent.VK_LEFT:
                       bL = true;
-                      x -=10;
                       break;
                   case KeyEvent.VK_UP:
                       bU = true;
-                      y -= 10;
                       break;
                   case KeyEvent.VK_RIGHT:
                       bR = true;
-                      x += 10;
                       break;
                   case KeyEvent.VK_DOWN:
                       bD = true;
-                      y += 10;
                       break;
                   default:
                       System.out.println("default");
                       break;
               }
+
+            //将被按下的方向传入
+            setMainTankDir();
         }
 
         //抬起调用
@@ -88,7 +85,7 @@ public class TankFrame extends Frame {
         public void keyReleased(KeyEvent e) {
 
             int key = e.getKeyCode();
-            //判断按的是上下左右那个键
+            //判断抬起的是哪个方向，改为false状态
             switch (key) {
                 case KeyEvent.VK_LEFT:
                     bL = false;
@@ -107,9 +104,25 @@ public class TankFrame extends Frame {
 
                     break;
                 default:
-
                     break;
             }
+
+            setMainTankDir();
+        }
+
+
+        //根据按键状态改变方向
+        public void setMainTankDir() {
+/*           Dir dir = myTank.getDir();
+           if (bL) dir = Dir.LEFT;
+           if (bU) dir = Dir.UP;
+           if (bR) dir = Dir.RIGHT;
+           if (bD) dir = Dir.DOWN;*/
+
+            if (bL) myTank.setDir(Dir.LEFT);
+            if (bU) myTank.setDir(Dir.UP);
+            if (bR) myTank.setDir(Dir.RIGHT);
+            if (bD) myTank.setDir(Dir.DOWN);
         }
     }
 

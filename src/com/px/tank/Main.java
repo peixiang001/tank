@@ -2,12 +2,12 @@ package com.px.tank;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        TankFrame tankFrame = new TankFrame();
+        TankFrame tf = new TankFrame();
 
-        //repaint调用paint，窗口重置，然后就会自己移动
+        //repaint会调用paint，窗口会自己重置，然后就会移动，改变位置
         while (true) {
             Thread.sleep(50);
-            tankFrame.repaint();
+            tf.repaint();
         }
     }
 
