@@ -15,10 +15,16 @@ import java.util.concurrent.BlockingQueue;
 public class TankFrame extends Frame {
 
      //this就是当前的TankFrame
-     Tank myTank = new Tank(200,200,Dir.DOWN,this);
+     //自己tank
+     Tank myTank = new Tank(200,200,Dir.DOWN,Group.GOOD,this);
+     //爆炸图
+     Explode explode = new Explode(100,100,this);
      //多个子弹
      List<Bullet> bullets = new ArrayList<>();
+     //敌人
      List<Tank> tanks = new ArrayList<>();
+     //多个爆炸
+     List<Explode> explodes = new ArrayList<>();
      //设置游戏场景大小
      static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
     //继承父类的方法
@@ -70,6 +76,7 @@ public class TankFrame extends Frame {
         g.setColor(Color.WHITE);
         //显示子弹数量
         g.drawString("子弹的数量：" + bullets.size(),10,60);
+        //显示敌人数量
         g.drawString("敌tank的数量：" + tanks.size(),10,80);
         g.setColor(c);
 
@@ -85,11 +92,18 @@ public class TankFrame extends Frame {
         for (int i = 0; i < tanks.size(); i++) {
             tanks.get(i).paint(g);
         }
+
         //碰撞,子弹打坦克
         for (int i = 0; i < bullets.size() ; i++) {
             for (int j = 0; j < tanks.size() ; j++) {
+                //碰撞之后消失
                 bullets.get(i).collideWith(tanks.get(j));
             }
+        }
+
+        //爆炸
+        for (int i = 0; i < explodes.size() ; i++) {
+             explodes.get(i).panit(g);
         }
 /*      //删除方式2，迭代器方式
         for (Iterator<Bullet> iterator = bullets.iterator(); iterator.hasNext();) {
@@ -100,6 +114,7 @@ public class TankFrame extends Frame {
 /*        for (Bullet bullet : bullets) {
             bullet.paint(g);
         }*/
+
 
     }
 

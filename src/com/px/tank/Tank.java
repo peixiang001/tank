@@ -4,9 +4,11 @@ import com.sun.org.apache.regexp.internal.REUtil;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.Random;
 
 public class Tank {
 
+    private Random random = new Random();
     //坐标位置
     private int x , y;
     //初始方向
@@ -16,26 +18,28 @@ public class Tank {
 
     //是否移动
     private boolean moving = false;
-
     //窗口
     private TankFrame tf = null;
 
-
     private boolean living = true;
+    //敌我tank,子弹区分
+    private Group group = Group.GOOD;
 
     //tank的宽高
-    public static int WIDTH = ResourceMgr.tankD.getWidth();
-    public static int HEIGHT = ResourceMgr.tankD.getHeight();
+    public static int WIDTH = ResourceMgr.tankU.getWidth();
+    public static int HEIGHT = ResourceMgr.tankU.getHeight();
+
 
 
     public Tank() {
     }
 
     //将窗口TankFrame传到Tank中，拿到窗口，就可以拿到子弹
-    public Tank(int x, int y, Dir dir,TankFrame tf) {
+    public Tank(int x, int y, Dir dir,Group group,TankFrame tf) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.group = group;
         this.tf = tf;
     }
 
@@ -75,6 +79,13 @@ public class Tank {
         this.moving = moving;
     }
 
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
 
     public void paint(Graphics g) {
         //设置位置和大小
@@ -82,6 +93,7 @@ public class Tank {
         g.setColor(Color.BLUE);
         g.fillRect(x,y,40,40);
         g.setColor(c);*/
+        //!living = ! false = true 删除tank
         if (!living) {
             tf.tanks.remove(this);
         }
@@ -122,6 +134,8 @@ public class Tank {
                 y += SPEED;
                 break;
         }
+
+        if(random.nextInt(10) > 8) this.fire();
     }
 
     public void fire() {
@@ -130,14 +144,14 @@ public class Tank {
         int bx = this.x + Tank.WIDTH/2 - Bullet.getWIDTH()/2;
         int by = this.y + Tank.HEIGHT/2 - Bullet.getHEIGHT()/2;
 
-
-        tf.bullets.add(new Bullet(bx,by,this.dir,this.tf));
+        tf.bullets.add(new Bullet(bx,by,this.dir,this.group,this.tf));
 
     }
 
 
     //消失
     public void die() {
+        //设置为false，让tank消失
         this.living = false;
     }
 }

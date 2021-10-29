@@ -10,22 +10,28 @@ public class Bullet {
     private static final int SPEED = 8 ;
 
     //子弹的宽高
-    private static int WIDTH = ResourceMgr.bulletD.getWidth();
-    private static int HEIGHT = ResourceMgr.bulletD.getHeight();
+    private static int WIDTH = ResourceMgr.bulletU.getWidth();
+    private static int HEIGHT = ResourceMgr.bulletU.getHeight();
 
     private int x, y;
 
     private Dir dir;
 
     private TankFrame tf = null;
+    //敌我tank子弹区分
+    private Group group = Group.BAD;
 
     //是否存活
     private boolean living = true;
 
-    public Bullet(int x, int y, Dir dir, TankFrame tf) {
+    public Bullet() {
+    }
+
+    public Bullet(int x, int y, Dir dir, Group group, TankFrame tf) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.group = group;
         this.tf = tf;
     }
 
@@ -52,6 +58,14 @@ public class Bullet {
 
     public static void setHEIGHT(int HEIGHT) {
         Bullet.HEIGHT = HEIGHT;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     //画出子弹
@@ -110,14 +124,20 @@ public class Bullet {
 
     //打tank碰撞
     public void collideWith(Tank tank) {
+        //判读是是否相同，是敌是友,友军就不会碰撞，直接返回
+        if (this.group == tank.getGroup()) return;
+
+        //Todo:用一个rect来记录子弹的位置
         //求子弹矩形
         Rectangle rect1 = new Rectangle(this.x,this.y,WIDTH,HEIGHT);
         //求tank矩形
         Rectangle rect2 = new Rectangle(tank.getX(),tank.getY(),tank.WIDTH,tank.HEIGHT);
 
+        //是否相交
         if (rect1.intersects(rect2)) {
               tank.die();
               this.die();
+              tf.explodes.add(new Explode(x,y,tf));
         }
 
     }
