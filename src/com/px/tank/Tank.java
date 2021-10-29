@@ -17,7 +17,7 @@ public class Tank {
     private static final int SPEED = 5;
 
     //是否移动
-    private boolean moving = false;
+    private boolean moving = true;
     //窗口
     private TankFrame tf = null;
 
@@ -26,8 +26,8 @@ public class Tank {
     private Group group = Group.GOOD;
 
     //tank的宽高
-    public static int WIDTH = ResourceMgr.tankU.getWidth();
-    public static int HEIGHT = ResourceMgr.tankU.getHeight();
+    public static int WIDTH = ResourceMgr.goodTankU.getWidth();
+    public static int HEIGHT = ResourceMgr.goodTankU.getHeight();
 
 
 
@@ -99,16 +99,17 @@ public class Tank {
         }
         switch (dir) {
             case LEFT:
-                g.drawImage(ResourceMgr.tankL,x,y,null);
+                //判断是好tank还是坏tank
+                g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankL:ResourceMgr.badTankL,x,y,null);
                 break;
             case UP:
-                g.drawImage(ResourceMgr.tankU,x,y,null);
+                g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankU:ResourceMgr.badTankU,x,y,null);
                 break;
             case RIGHT:
-                g.drawImage(ResourceMgr.tankR,x,y,null);
+                g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankR:ResourceMgr.badTankR,x,y,null);
                 break;
             case DOWN:
-                g.drawImage(ResourceMgr.tankD,x,y,null);
+                g.drawImage(this.group == Group.GOOD ? ResourceMgr.goodTankD:ResourceMgr.badTankD,x,y,null);
                 break;
         }
 
@@ -135,7 +136,18 @@ public class Tank {
                 break;
         }
 
-        if(random.nextInt(10) > 8) this.fire();
+        //当为敌tank时，自主发射
+        if(this.group == Group.BAD && random.nextInt(100) > 95) this.fire();
+
+        //随机方向
+        if(this.group == Group.BAD && random.nextInt(100) > 95)
+            //随机移动的方向
+            randomDir();
+    }
+
+    private void randomDir() {
+        //values将Dir变成Dir数组，取出下标位置
+        this.dir = Dir.values()[random.nextInt(4)];
     }
 
     public void fire() {
